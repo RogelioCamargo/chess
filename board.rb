@@ -11,24 +11,33 @@ class Board
 	end
 
 	def [](position)
+		raise "Invalid position" unless valid_position?(position)
+
 		x, y = position
 		@rows[x][y]
 	end
 
-	def []=(position)
+	def []=(position, piece)
+		raise "Invalid position" unless valid_position?(position)
+
 		x, y = position 
-		@rows[x][y]
+		@rows[x][y] = piece
 	end
 
 	def move_piece(start_position, end_position)
-		p start_position 
-		puts 
-		p end_position
-		if self[start_position].nil?
-			raise "No piece found at position #(start_position), try again."
+		piece = self[start_position]
+		if piece.nil?
+			raise "No piece found at position #{start_position}, try again."
 		end
-		self[end_position] = self[start_position]
+
+		self[end_position] = piece
 		self[start_position] = nil 
+
+		nil
+	end
+
+	def valid_position?(position)
+		position.all? { |coordinate| coordinate.between?(0, 7) }
 	end
 
 	private 
